@@ -5,74 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id='app'>
-        <h1>Vue shopping cart</h1>
-        <p>{{product_id}}</p>
+        <header>
+            <nav class="navbar">
+                <h1 class="navbar-brand">Market Square</h1>
+            </nav>
+        </header>
 
-        <div class="form-group" style="margin-top: 40px">
-            <label for="exampleInputEmail1">Product Id</label>
-            <input type="text" class="form-control" placeholder="Enter Product Id" v-model="product_id" >
-        </div>
+        <div class="container">
+            <form>
+                <h5>Add a new product</h5>
+                <div class="form-group">
+                    <label for="product_id">Product Id</label>
+                    <input type="text" class="form-control" i = "product_id" placeholder="Enter Product ID" v-model="product_id" >
+                </div>
+        
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Product Description</label>
+                    <input type="text" class="form-control" placeholder="Product Description" v-model="product_desc">
+                </div>
+        
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Quantity</label>
+                    <input type="number" class="form-control" placeholder="Enter product Quantity" v-model="product_qty">
+                </div>
+        
+        
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Price</label>
+                    <input type="number" class="form-control" placeholder="Enter Product Price" v-model="product_price">
+                </div>
+        
+                <button class="btn btn-primary" v-on:click = "add_product" >Add Product</button><br />
+                
+            </form>
 
-        <div class="form-group">
-            <label for="exampleInputPassword1">Product Description</label>
-            <input type="text" class="form-control" placeholder="Product Description" v-model="product_desc">
-        </div>
+            <div class="section">
+                <h5 class="table-titles">Available Products</h5>
+                <div v-if = "product_list.length" class="product_list">
+                    <header>
+                        <p scope="col">ID</p>
+                        <p scope="col">Description</p>
+                        <p scope="col">Quantitiy</p>
+                        <p scope="col">Price</p>
+                        <p scope="col">Actions</p>
+                    </header>
+                        <product-item v-for="product in product_list"
+                                        v-bind:product = "product"
+                                        v-bind:key = "product.id"></product-item>
+                </div>
+                <div v-else>
+                    <p>There are no products currently available.</p>
+                </div>
+            </div>
 
-        <div class="form-group">
-            <label for="exampleInputPassword1">Quantity</label>
-            <input type="number" class="form-control" placeholder="Enter product Quantity" v-model="product_qty">
-        </div>
-
-
-        <div class="form-group">
-            <label for="exampleInputPassword1">Price</label>
-            <input type="number" class="form-control" placeholder="Enter Product Price" v-model="product_price">
-        </div>
-
-        <button style="margin-top: 15px" type="submit" class="btn btn-primary" v-on:click = "add_product" >Add Product</button><br />
-
-        <div>
-            <table>
-                <h4 class="table-titles">Available Products</h4>
-                <thead>
-                    <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Quantitiy</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <product-item v-for="product in product_list"
-                                  v-bind:product = "product"
-                                  v-bind:key = "product.id"></product-item>
-                </tbody>
-            </table>
-        </div>
-
-        <div>
-            <table>
-                <h4 class="table-titles">Shopping Cart</h4>
-                <thead>
-                    <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Quantitiy</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <selected-item v-for="product in shopping_cart"
+            <div class="section">
+                    <h4 class="table-titles">Your cart</h4>
+                <div v-if = "shopping_cart.length" class="product_list">
+                    <header>
+                        <p scope="col">ID</p>
+                        <p scope="col">Description</p>
+                        <p scope="col">Quantitiy</p>
+                        <p scope="col">Price</p>
+                        <p scope="col">Actions</p>
+                    </header>
+                    <selected-item  v-for="product in shopping_cart"
                                     v-bind:product = "product"
                                     v-bind:key = "product.id"></selected-item>
-                </tbody>
-            </table>
+                </div>
+                <div v-else>
+                    <p>You havent added any item to your shopping cart yet.</p>
+                </div>
+            </div>
+
         </div>
+        
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -88,15 +98,15 @@
 
         Vue.component('selected-item', {
             props: ['product'],
-            template: `<tr>
-                            <td>{{product.id}}</td>
-                            <td>{{product.desc}}</td> 
-                            <td>{{product.quantity}}</td>
-                            <td>{{product.price}}</td>
-                            <td>
-                                <button v-on:click="remove_product">REMOVE</button>
-                            </td>
-                        </tr>`,
+            template: `<div class="product_item">
+                            <p>{{product.id}}</p>
+                            <p>{{product.desc}}</p> 
+                            <p>{{product.quantity}}</p>
+                            <p>{{product.price}}</p>
+                            <div>
+                                <button v-on:click="remove_product"><img src="./images/remove_product.png" ></button>
+                            </div>
+                        </div>`,
             methods: {
                 remove_product: function(){
                     let product_index = app.shopping_cart.indexOf(this.product);
@@ -108,16 +118,16 @@
 
         Vue.component('product-item', {
             props: ['product'],
-            template:   `<tr>
-                            <td>{{product.id}}</td>
-                            <td>{{product.desc}}</td> 
-                            <td>{{product.quantity}}</td>
-                            <td>{{product.price}}</td>
-                            <td>
-                                <button v-on:click="add_to_cart">ADD TO CART</button>
-                                <button v-on:click="remove_product">REMOVE</button>
-                            </td>
-                        </tr>`,
+            template:   `<div class="product_item">
+                            <p>{{product.id}}</p>
+                            <p>{{product.desc}}</p> 
+                            <p>{{product.quantity}}</p>
+                            <p>{{product.price}}</p>
+                            <div>
+                                <button v-on:click="add_to_cart"><img src="./images/add_product.png" ></button>
+                                <button v-on:click="remove_product"><img src="./images/remove_product.png" ></button>
+                            </div>
+                        </div>`,
             methods: {
                 add_to_cart: function(){
                     console.log('Adding to cart', this.product.desc);
@@ -150,6 +160,7 @@
             },
             methods: {
                 add_product: function(event){
+                    event.preventDefault();
                     console.log('Add button clicked');
                     this.product_list.push(new Product(this.product_id,
                                                         this.product_desc,
