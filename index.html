@@ -62,8 +62,11 @@
                 </div>
             </div>
 
-            <div class="section">
-                    <h4 class="table-titles">Your cart</h4>
+            <div class="section cart">
+                    <header>
+                        <h5 class="table-titles">Your cart</h5>
+                        <h5>Total: N{{total}}</h5>
+                    </header>
                 <div v-if = "shopping_cart.length" class="product_list">
                     <header>
                         <p scope="col">ID</p>
@@ -107,11 +110,17 @@
                                 <button v-on:click="remove_product"><img src="./images/remove_product.png" ></button>
                             </div>
                         </div>`,
+            data: function(){
+                return{
+                    total: 0
+                }
+            } ,
             methods: {
                 remove_product: function(){
                     let product_index = app.shopping_cart.indexOf(this.product);
                     console.log('About to remove '+ product_index);
                     app.shopping_cart.splice(product_index, 1);
+                    app.update_total();
                 },
             }
         })
@@ -136,7 +145,8 @@
                         this.product.desc,
                         this.product.quantity,
                         this.product.price
-                    ))
+                    ));
+                    app.update_total();
                 },
                 remove_product: function(){
                     console.log('Removing from product list')
@@ -157,6 +167,7 @@
                 product_price: '',
                 product_list: [],
                 shopping_cart: [],
+                total: 0,
             },
             methods: {
                 add_product: function(event){
@@ -167,6 +178,13 @@
                                                         this.product_qty,
                                                         this.product_price));
                 },
+                update_total: function(){
+                    let total = 0;
+                    this.shopping_cart.forEach((product) => [
+                        total += product.price * product.quantity
+                    ])
+                    this.total = total;
+                }
             }
         })
     </script>

@@ -73,3 +73,8 @@ form button{
     margin-right: 5px;
     cursor: pointer;
 }
+
+.cart header{
+    display: flex;
+    justify-content: space-between;
+}
