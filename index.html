@@ -91,6 +91,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
         class Product {
+            // Represents a single product in the store
             constructor(id, desc, quantity, price) {
                 this.id = id;
                 this.desc = desc;
@@ -99,6 +100,7 @@
             }
         }
 
+        //Items that have been added to the shopping cart
         Vue.component('selected-item', {
             props: ['product'],
             template: `<div class="product_item">
@@ -118,13 +120,13 @@
             methods: {
                 remove_product: function(){
                     let product_index = app.shopping_cart.indexOf(this.product);
-                    console.log('About to remove '+ product_index);
                     app.shopping_cart.splice(product_index, 1);
                     app.update_total();
                 },
             }
         })
 
+        //All available items in the store
         Vue.component('product-item', {
             props: ['product'],
             template:   `<div class="product_item">
@@ -139,7 +141,6 @@
                         </div>`,
             methods: {
                 add_to_cart: function(){
-                    console.log('Adding to cart', this.product.desc);
                     app.shopping_cart.push(new Product(
                         this.product.id,
                         this.product.desc,
@@ -149,9 +150,7 @@
                     app.update_total();
                 },
                 remove_product: function(){
-                    console.log('Removing from product list')
                     let product_index = app.shopping_cart.indexOf(this.product);
-                    console.log('About to remove '+ product_index);
                     app.product_list.splice(product_index, 1);
                 }
             }
@@ -161,7 +160,7 @@
             el: '#app',
             data: {
                 message: 'Hello world!',
-                product_id: '',
+                product_id: '', //These fields hold values of the form to add a new product
                 product_desc: '',
                 product_qty: '',
                 product_price: '',
@@ -172,7 +171,6 @@
             methods: {
                 add_product: function(event){
                     event.preventDefault();
-                    console.log('Add button clicked');
                     this.product_list.push(new Product(this.product_id,
                                                         this.product_desc,
                                                         this.product_qty,
