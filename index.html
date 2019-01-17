@@ -171,10 +171,32 @@
             methods: {
                 add_product: function(event){
                     event.preventDefault();
+
+                    //Convert price and quantity to numbers
+                    this.product_qty = Number(this.product_qty);
+                    this.product_price = Number(this.product_price);
+
+                    //Check for empty fields
+                    if(this.product_id === "" || this.product_desc === "" || this.product_qty <= 0 || this.product_price <= 0 ){
+                        alert("Please fill all fields");
+                        return;
+                    }
+                    
+                    /*Check that the ids are unique, if ID of new product already exists,
+                     increment the quantity of the product in the product list */
+                    for(let i=0; i < this.product_list.length; i++){
+                        if(this.product_list[i].id === this.product_id){
+                            this.product_list[i].quantity += this.product_qty;
+                            this.clear_inputs();
+                            return;
+                        }
+                    }
+
                     this.product_list.push(new Product(this.product_id,
                                                         this.product_desc,
                                                         this.product_qty,
                                                         this.product_price));
+                    this.clear_inputs();
                 },
                 update_total: function(){
                     let total = 0;
@@ -182,6 +204,12 @@
                         total += product.price * product.quantity
                     ])
                     this.total = total;
+                },
+                clear_inputs: function(){
+                    this.product_id = "";
+                    this.product_desc = "";
+                    this.product_price = "";
+                    this.product_qty = "";
                 }
             }
         })
